@@ -5,13 +5,13 @@ from dataclasses import dataclass
 import tomllib
 
 
-@dataclass(frozen=true)
+@dataclass(frozen=True)
 class ProjectConfig:
     name: str
     experiment_name: str
 
 
-@dataclass(frozen=true)
+@dataclass(frozen=True)
 class DataConfig:
     raw_dir: str
     split_dir: str
@@ -21,7 +21,7 @@ class DataConfig:
     seed: int
 
 
-@dataclass(frozen=true)
+@dataclass(frozen=True)
 class ModelConfig:
     architecture: str
     num_layers: int
@@ -29,7 +29,7 @@ class ModelConfig:
     dim_ratio: int
 
 
-@dataclass(frozen=true)
+@dataclass(frozen=True)
 class TrainingConfig:
     lr: float
     max_steps: int
@@ -42,14 +42,14 @@ class TrainingConfig:
     scheduler: str
 
 
-@dataclass(frozen=true)
+@dataclass(frozen=True)
 class LoggingConfig:
     use_wandb: bool
     project_name: str
     assets_dir: str
 
 
-@dataclass(frozen=true)
+@dataclass(frozen=True)
 class Config:
     project: ProjectConfig
     data: DataConfig
@@ -60,10 +60,10 @@ class Config:
     @classmethod
     def load(cls, path: str = "configs/base.toml"):
         path_obj = pathlib.Path(path)
-        if not path_obj.exists and not path_obj.is_file():
+        if not path_obj.exists() or not path_obj.is_file():
             raise FileNotFoundError(f"Config file {path} does not exist at path {path}")
 
-        with open(path_ob, "rb") as f:
+        with open(path_obj, "rb") as f:
             data = tomllib.load(f)
 
         return cls(
