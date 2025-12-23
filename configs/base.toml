@@ -8,6 +8,7 @@ split_dir = 'data/splits'
 batch_size = 32
 num_workers = 4
 image_size = [128,128]
+seed = 777
 
 [model]
 architecture = 'vision_transformer'
