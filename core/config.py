@@ -15,9 +15,10 @@ class ProjectConfig:
 class DataConfig:
     raw_dir: str
     split_dir: str
-    batch_size: str
+    batch_size: int
     num_workers: int
     image_size: list[int]
+    seed: int
 
 
 @dataclass(frozen=true)
