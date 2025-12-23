@@ -21,16 +21,16 @@ class VisionMathProcessor:
             ]
         )
 
-        def preprocess_image(self, img):
-            return self.image_transform(img)
+    def preprocess_image(self, img):
+        return self.image_transform(img)
 
-        def decode(self, token_ids):
-            if isinstance(token_ids, torch.Tensor):
-                token_ids = token_ids.tolist()
+    def decode(self, token_ids):
+        if isinstance(token_ids, torch.Tensor):
+            token_ids = token_ids.tolist()
 
-            chars = []
-            for t in token_ids:
-                if t in (EOS_ID, PAD_ID):
-                    break
-                chars.append(itos(t))
-            return "".join(chars)
+        chars = []
+        for t in token_ids:
+            if t in (EOS_ID, PAD_ID):
+                break
+            chars.append(itos(t))
+        return "".join(chars)
