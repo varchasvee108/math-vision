@@ -24,6 +24,7 @@ betas = [0.9, 0.95]
 grad_clip = 1.0
 val_every_steps = 500
 vis_every_steps = 500
+scheduler = 'cosine'
 
 
 [logging]
