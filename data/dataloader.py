@@ -1,10 +1,11 @@
 from torch.utils.data import DataLoader
-from data.processor import VisionMathProcessor
+from datasets.dataset import VisionMathDataset
 from core.config import Config
+from data.processor import VisionMathProcessor
 
 
 def create_dataloader(config: Config, processor: VisionMathProcessor):
-    train_dataset = VisionMathProcessor(config.data.image_size[0])
+    train_dataset = VisionMathDataset(config, processor, split="train")
     train_dataloader = DataLoader(
         train_dataset,
         batch_size=config.data.batch_size,
@@ -13,11 +14,11 @@ def create_dataloader(config: Config, processor: VisionMathProcessor):
         pin_memory=True,
     )
 
-    val_dataset = VisionMathProcessor(config.data.image_size[0])
+    val_dataset = VisionMathDataset(config, processor, split="val")
     val_dataloader = DataLoader(
         val_dataset,
         batch_size=config.data.batch_size,
-        shuffle=True,
+        shuffle=False,
         num_workers=config.data.num_workers,
         pin_memory=True,
     )
