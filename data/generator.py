@@ -4,8 +4,8 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 import argparse
-from core.config import Config
 from data.processor import VOCAB, stoi, itos, PAD_ID, EOS_ID
+from core.config import Config
 
 
 def generate_single_image(size: tuple, max_digits=4):
@@ -44,9 +44,9 @@ def generate_single_image(size: tuple, max_digits=4):
 
 
 def generate_raw_data():
-    config = Config()
+    config = Config.load()
     parser = argparse.ArgumentParser()
-    parser.add_argument("--samples", type=int, default=12000)
+    parser.add_argument("--samples", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=config.data.seed)
     args = parser.parse_args()
 
@@ -60,7 +60,7 @@ def generate_raw_data():
 
     dataset = []
 
-    image_size = (config.data.image_size, config.data.image_size)
+    image_size = tuple(config.data.image_size)
 
     for i in range(args.samples):
         img, tokens, result = generate_single_image(image_size)
@@ -70,7 +70,7 @@ def generate_raw_data():
         img.save(file_path)
 
         dataset.append(
-            {"image_path": file_path, "target_ids": tokens, "label_value": result}
+            {"image_path": str(file_path), "target_ids": tokens, "label_value": result}
         )
 
         if (i + 1) % 500 == 0:
@@ -82,7 +82,7 @@ def generate_raw_data():
     train_dataset = dataset[:split_point]
     val_dataset = dataset[split_point:]
 
-    with open(split_dir / "train.json" "w") as f:
+    with open(split_dir / "train.json", "w") as f:
         json.dump(train_dataset, f, indent=4)
 
     with open(split_dir / "val.json", "w") as f:
