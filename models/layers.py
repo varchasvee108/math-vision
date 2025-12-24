@@ -74,7 +74,7 @@ class EncoderBlock(nn.Module):
             x_norm, x_norm, x_norm, need_weights=return_attn, attn_mask=mask
         )
         x = x + self.dropout(attn_out)
-        x = x + self.mlp(self.ln2(x))
+        x = x + self.dropout(self.mlp(self.ln2(x)))
         if return_attn:
             return x, weights
         return x
@@ -102,9 +102,9 @@ class DecoderBlock(nn.Module):
         self.mlp = MLP(config=config)
         self.dropout = nn.Dropout(config.model.dropout)
 
-    def forward(self, x, memory, causal_mask=None):
+    def forward(self, x, memory, mask=None):
         x_norm = self.ln1(x)
-        attn_out, _ = self.attn(x_norm, x_norm, x_norm, attn_mask=causal_mask)
+        attn_out, _ = self.attn(x_norm, x_norm, x_norm, attn_mask=mask)
         x = x + self.dropout(attn_out)
 
         x_norm = self.ln2(x)
