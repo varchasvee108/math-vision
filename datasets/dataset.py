@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.utils.data import Dataset
 from PIL import Image
 from data.processor import VisionMathProcessor
+import json
 
 
 class VisionMathDataset(Dataset):
