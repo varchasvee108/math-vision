@@ -29,6 +29,7 @@ class ModelConfig:
     dim_ratio: int
     patch_size: int
     num_heads: int
+    max_seq_len: int
     n_embd: int
 
 
