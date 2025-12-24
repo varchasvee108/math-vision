@@ -15,6 +15,9 @@ architecture = 'vision_transformer'
 num_layers = 6
 dropout = 0.1
 dim_ratio = 4
+patch_size = 16
+num_heads = 4
+n_embd = 256
 
 [training]
 lr = 1e-4
