@@ -76,7 +76,7 @@ def generate_raw_data():
             print(f"Generated {i + 1} samples")
 
     random.shuffle(dataset)
-    split_point = int(0.8 * len(dataset))
+    split_point = int(0.9 * len(dataset))
 
     train_dataset = dataset[:split_point]
     val_dataset = dataset[split_point:]
