@@ -4,7 +4,7 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 import argparse
-from data.processor import VOCAB, stoi, itos, PAD_ID, EOS_ID
+from data.processor import VOCAB, stoi, itos, PAD_ID, EOS_ID, SOS_ID
 from core.config import Config
 
 
@@ -34,10 +34,9 @@ def generate_single_image(size: tuple, max_digits=4):
     draw.text((rand_x, center_y), query_text, fill=0, font=font)
 
     answer_str = str(result)
-    tokens = [stoi[s] for s in answer_str]
-    tokens.append(EOS_ID)
+    tokens = [SOS_ID] + [stoi[s] for s in answer_str] + [EOS_ID]
 
-    while len(tokens) < max_digits + 1:
+    while len(tokens) < max_digits + 2:
         tokens.append(PAD_ID)
 
     return img, tokens, result
