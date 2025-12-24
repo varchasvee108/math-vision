@@ -32,5 +32,5 @@ class VisionMathProcessor:
         for t in token_ids:
             if t in (EOS_ID, PAD_ID):
                 break
-            chars.append(itos(t))
+            chars.append(itos[t])
         return "".join(chars)
