@@ -52,7 +52,7 @@ class MLP(nn.Module):
         return self.net(x)
 
 
-class TransformerBlock(nn.Module):
+class EncoderBlock(nn.Module):
     def __init__(self, config: Config):
         super().__init__()
         self.n_embd = config.model.n_embd
@@ -67,15 +67,50 @@ class TransformerBlock(nn.Module):
         self.mlp = MLP(config=config)
         self.dropout = nn.Dropout(config.model.dropout)
 
-    def forward(self, x, return_attn=False, context=None, mask=None):
+    def forward(self, x, return_attn=False, mask=None):
         x_norm = self.ln1(x)
 
-        kv = x_norm if context is None else context
         attn_out, weights = self.attn(
-            x_norm, kv, kv, need_weights=return_attn, attn_mask=mask
+            x_norm, x_norm, x_norm, need_weights=return_attn, attn_mask=mask
         )
         x = x + self.dropout(attn_out)
         x = x + self.mlp(self.ln2(x))
         if return_attn:
             return x, weights
+        return x
+
+
+class DecoderBlock(nn.Module):
+    def __init__(self, config: Config):
+        super().__init__()
+        n_embd = config.model.n_embd
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln2 = nn.LayerNorm(n_embd)
+        self.attn = nn.MultiheadAttention(
+            embed_dim=n_embd,
+            num_heads=config.model.num_heads,
+            dropout=config.model.dropout,
+            batch_first=True,
+        )
+        self.cross_atn = nn.MultiheadAttention(
+            embed_dim=n_embd,
+            num_heads=config.model.num_heads,
+            dropout=config.model.dropout,
+            batch_first=True,
+        )
+        self.ln3 = nn.LayerNorm(n_embd)
+        self.mlp = MLP(config=config)
+        self.dropout = nn.Dropout(config.model.dropout)
+
+    def forward(self, x, memory, causal_mask=None):
+        x_norm = self.ln1(x)
+        attn_out, _ = self.attn(x_norm, x_norm, x_norm, attn_mask=causal_mask)
+        x = x + self.dropout(attn_out)
+
+        x_norm = self.ln2(x)
+        attn_out, _ = self.cross_atn(x_norm, memory, memory)
+        x = x + self.dropout(attn_out)
+
+        x_norm = self.ln3(x)
+        x = x + self.dropout(self.mlp(x_norm))
         return x
