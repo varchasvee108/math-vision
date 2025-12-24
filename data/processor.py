@@ -3,6 +3,7 @@ from torchvision import transforms
 from PIL import Image
 
 VOCAB = ["<SOS>", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "<EOS>", "<PAD>"]
+VOCAB_SIZE = len(VOCAB)
 
 stoi = {s: i for i, s in enumerate(VOCAB)}
 itos = {i: s for i, s in enumerate(VOCAB)}
