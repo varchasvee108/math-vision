@@ -27,6 +27,9 @@ class ModelConfig:
     num_layers: int
     dropout: float
     dim_ratio: int
+    patch_size: int
+    num_heads: int
+    n_embd: int
 
 
 @dataclass(frozen=True)
