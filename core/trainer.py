@@ -140,14 +140,13 @@ class Trainer:
         total_loss = 0.0
 
         for batch in self.val_dataloader:
-            pixels = batch['pixel_values'].to(self.device)
-            labels = batch['labels'].to(self.device)
+            pixels = batch["pixel_values"].to(self.device)
+            labels = batch["labels"].to(self.device)
 
             decoder_inputs = labels[:, :-1]
-            target_labels = labels{:, 1:}
+            target_labels = labels[:, 1:]
             logits = self.model(pixels, decoder_inputs)
             loss = self.loss_fn(logits.reshape(-1, logits.size(-1)))
-
 
     def train(self):
         print(
