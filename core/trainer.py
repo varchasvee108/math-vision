@@ -146,7 +146,12 @@ class Trainer:
             decoder_inputs = labels[:, :-1]
             target_labels = labels[:, 1:]
             logits = self.model(pixels, decoder_inputs)
-            loss = self.loss_fn(logits.reshape(-1, logits.size(-1)))
+            loss = self.loss_fn(
+                logits.reshape(-1, logits.size(-1)), target_labels.reshape(-1)
+            )
+            total_loss += loss.item()
+
+        return total_loss / len(self.val_dataloader)
 
     def train(self):
         print(
